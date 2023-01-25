@@ -78,11 +78,44 @@ class UsersController extends Controller
 
         // ユーザのフォロワー一覧を取得
         $followers = $user->followers()->paginate(10);
-
+        
+        // dd($followers);
         // フォロワー一覧ビューでそれらを表示
         return view('users.followers', [
             'user' => $user,
             'users' => $followers,
+        ]);
+    }
+    
+    /**
+     * ユーザのお気に入り一覧ページを表示するアクション。
+     *
+     * @param  $id  ユーザのid
+     * @return \Illuminate\Http\Response
+     */
+    public function favorites($id)
+    {
+        // idの値でユーザを検索して取得
+        // $micropost = \App\Models\Micropost::findOrFail($id);
+        $user = User::findOrFail($id);
+        
+        // dd($micropost);
+        // dd($user);
+
+        // 関係するモデルの件数をロード
+        $user->loadRelationshipCounts();
+
+        // ユーザのお気に入り一覧を取得
+        $favorites = $user->favorites()->paginate(10);
+        
+        // dd($user);
+        // dd($favorites);
+        // 取得したいデータは正しそうなので、あとはViewの問題？
+        
+        // お気に入り一覧ビューでそれらを表示
+        return view('users.favorites', [
+            'user' => $user,
+            'favorites' => $favorites,
         ]);
     }
 }
